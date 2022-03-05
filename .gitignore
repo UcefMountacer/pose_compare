@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.pth
+*.weights
+JDE-1088x608-uncertainty
 # C extensions
 *.so
 
