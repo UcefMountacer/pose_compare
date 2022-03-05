@@ -1,6 +1,7 @@
 
 import numpy as np
 import json
+import os
 import cv2
 
 def read_json(json_path):
@@ -132,13 +133,13 @@ def get_median_score_per_frame_and_max(list_frames_data, label_norm):
     return frame_data, index
 
 
-def bad_scores_box(frame_data, scores):
+def bad_scores_box(frame_data, scores, TH):
 
     list_bad_bbox = []
 
     for sc, element in zip(scores, frame_data):
 
-        if sc < 90:
+        if sc < TH:
 
             box = element[0]['box']
             list_bad_bbox.append(box)
@@ -146,8 +147,23 @@ def bad_scores_box(frame_data, scores):
     return list_bad_bbox
 
 
-def save_bbox_img(list_bbox , path):
+def save_bbox_img(list_bbox , path, index, sav_path):
 
     #read image first
-    im = cv2.imread(path)
+    fr_path = os.path.join(path, str(index) + '.png')
+    frame = cv2.imread(path)
+
+    #get bbox
+    for i,box in enumerate(list_bbox):
+        [a,b,c,d] = box
+        a = int(a)
+        b = int(b)
+        c = int(c)
+        d = int(d)
+
+        bim = frame[b:b+d,a:a+c]
+        cv2.imwrite(os.path.join(sav_path, 'frame_' + str(index) + '_box_' + str(i) + '.png') , bim)
+
+
+
 

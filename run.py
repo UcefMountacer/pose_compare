@@ -7,7 +7,8 @@ import subprocess
 LABELS = 'labels/'
 SAVE_DATA = 'data/'
 SAVE_LABEL = 'data/label/'
-TH = 90
+BAD_BBOX = 'outputs/bad_bbox'
+TH = 90.0
 
 def run(action_id, video_path):
 
@@ -48,17 +49,18 @@ def run(action_id, video_path):
     list_frames_data = divide_json_frames(frames_json_normalized, nbr_frames)
 
     # get median score for all frames and get max : this is the frame
-    frame_data = get_median_score_per_frame_and_max(list_frames_data , label_json_normalized)
+    frame_data, index= get_median_score_per_frame_and_max(list_frames_data , label_json_normalized)
 
     # get scores for this frame
-    scores, index = cos_sim(label_json_normalized , frame_data)
+    scores = cos_sim(label_json_normalized , frame_data)
 
     print(scores)
 
     #save bounding box of bad ppl pose (under 90)
-    list_bad_bbox = bad_scores_box(frame_data, scores)
+    list_bad_bbox = bad_scores_box(frame_data, scores, TH)
 
     # save images of bbox
+    save_bbox_img(list_bad_bbox , SAVE_DATA, index, BAD_BBOX)
     
 
 
