@@ -1,4 +1,5 @@
 import os
+import glob
 import cv2
 
 def video_to_frames(path_vid, save_path):
@@ -21,6 +22,25 @@ def video_to_frames(path_vid, save_path):
         pass
 
     return i
+
+
+def clean_directories(CWD, SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS):
+
+    def clean_dir(CWD, relative_path, ext):
+
+        files = glob.glob(os.path.join(CWD , relative_path + '*' + ext))
+        for f in files:
+            os.remove(f)   
+
+    clean_dir(CWD, SAVE_DATA, 'png')
+    clean_dir(CWD, BAD_BBOX, 'png')
+    clean_dir(CWD, JSON_FRAMES, 'json')
+    clean_dir(CWD, JSON_LABELS, 'json')
+
+    print('data directories emptied')
+    
+
+
 
 
 # # Unused

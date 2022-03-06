@@ -4,10 +4,13 @@ from libraries.score import *
 from libraries.visualize import *
 import subprocess
 
+
+CWD = os.getcwd()
 LABELS = 'labels/'
 SAVE_DATA = 'data/frames/'
-SAVE_LABEL = 'data/label/'
 BAD_BBOX = 'outputs/bad_bbox/'
+JSON_FRAMES = 'outputs/json_frames'
+JSON_LABELS = 'outputs/json_labels'
 TH = 80.0
 
 
