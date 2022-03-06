@@ -45,8 +45,8 @@ def run(action_id, video_path):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 
     # normalize
-    label_json_normalized = l2_normalize('outputs/json/label.json')
-    frames_json_normalized = l2_normalize('outputs/json/frames.json')
+    label_json_normalized = l2_normalize('outputs/json_labels/alphapose-results.json')
+    frames_json_normalized = l2_normalize('outputs/json_frames/alphapose-results.json')
 
     # get action label (account for jpg and png types)
     action_label = [el for el in label_json_normalized if el['image_id'] == action_id + '.jpg'] + \
