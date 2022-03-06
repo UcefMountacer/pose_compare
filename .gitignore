@@ -6,6 +6,8 @@ __pycache__/
 *.pth
 *.weights
 JDE-1088x608-uncertainty
+
+*.zip
 # C extensions
 *.so
 
