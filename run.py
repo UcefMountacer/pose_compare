@@ -5,10 +5,11 @@ from libraries.visualize import *
 import subprocess
 
 LABELS = 'labels/'
-SAVE_DATA = 'data/'
+SAVE_DATA = 'data/frames/'
 SAVE_LABEL = 'data/label/'
 BAD_BBOX = 'outputs/bad_bbox'
 TH = 90.0
+
 
 def run(action_id, video_path):
 
@@ -24,20 +25,20 @@ def run(action_id, video_path):
     # other frames
     # output json will contain all
     # to know how to get per frame json, use number of frames in the list
-    command = 'python3 third_party/scripts/demo_inference.py \
-               --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-               --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
-               --indir SAVE_LABEL \
-               --detfile outputs/json/label.json'
+    command = '!python3 third_party/scripts/demo_inference.py \
+                    --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
+                    --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
+                    --indir /content/pose_compare/data/label/ \
+                    --outdir outputs/json_label/'
                
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 
 
-    command = 'python3 third_party/scripts/demo_inference.py \
-               --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-               --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
-               --indir SAVE_DATA \
-               --detfile outputs/json/frames.json'
+    command = '!python3 third_party/scripts/demo_inference.py \
+                --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
+                --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
+                --indir /content/pose_compare/data/frames/ \
+                --outdir outputs/json/'
 
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 
