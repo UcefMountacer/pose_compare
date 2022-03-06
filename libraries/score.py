@@ -13,13 +13,15 @@ def read_json(json_path):
     return file
 
 
-def cos_sim(label, ip_data):
+def cos_sim(action_label, ip_data):
 
     score_list = []
     final_scores = []
+    
+    label = action_label[0]['keypoints']
 
-    for frame in range(len(ip_data)):
-        ip_kpt = ip_data[frame]['keypoints']
+    for k in range(len(ip_data)):
+        ip_kpt = ip_data[k]['keypoints']
         ip_list = []
         label_list = []
 
@@ -46,6 +48,8 @@ def cos_sim(label, ip_data):
 
         # print(score)
         final_scores.append(score)
+
+    return final_scores
 
 
 
@@ -128,9 +132,9 @@ def get_median_score_per_frame_and_max(list_frames_data, label_norm):
 
     # max_score = np.max(LIST_SCORES)
     frame_data = list_frames_data[np.argmax(list_sscores)]
-    index = np.argmax(list_sscores)
+    frame_name = frame_data[0]['image_id']
 
-    return frame_data, index
+    return frame_data, frame_name
 
 
 def bad_scores_box(frame_data, scores, TH):
@@ -141,17 +145,17 @@ def bad_scores_box(frame_data, scores, TH):
 
         if sc < TH:
 
-            box = element[0]['box']
+            box = element['box']
             list_bad_bbox.append(box)
 
     return list_bad_bbox
 
 
-def save_bbox_img(list_bbox , path, index, sav_path):
+def save_bbox_img(list_bbox , path, frame_name, sav_path):
 
     #read image first
-    fr_path = os.path.join(path, str(index) + '.png')
-    frame = cv2.imread(path)
+    fr_path = os.path.join(path, frame_name)
+    frame = cv2.imread(fr_path)
 
     #get bbox
     for i,box in enumerate(list_bbox):
@@ -162,8 +166,4 @@ def save_bbox_img(list_bbox , path, index, sav_path):
         d = int(d)
 
         bim = frame[b:b+d,a:a+c]
-        cv2.imwrite(os.path.join(sav_path, 'frame_' + str(index) + '_box_' + str(i) + '.png') , bim)
-
-
-
-
+        cv2.imwrite(os.path.join(sav_path, frame_name[:-4] + '_box_' + str(i) + '.png') , bim)
