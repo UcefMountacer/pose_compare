@@ -10,18 +10,20 @@ def video_to_frames(path_vid, save_path):
 
     vidcap = cv2.VideoCapture(path_vid)
     i = 0
+    k = 0
     success,image = vidcap.read()
     try:
         while success:
+            success,image = vidcap.read()
             if i%10 == 0:
-                success,image = vidcap.read()
                 path = os.path.join(save_path , str(i)+ '.png')
                 cv2.imwrite(path , image)
+                k = k+1
             i = i+1
     except:
         pass
 
-    return i
+    return k
 
 
 def clean_directories(SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO):
