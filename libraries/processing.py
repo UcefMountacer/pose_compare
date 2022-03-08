@@ -24,19 +24,19 @@ def video_to_frames(path_vid, save_path):
     return i
 
 
-def clean_directories(CWD, SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, video_path):
+def clean_directories(SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO):
 
-    def clean_dir(CWD, relative_path, ext):
+    def clean_dir(relative_path, ext):
 
-        files = glob.glob(os.path.join(CWD , relative_path, '*' + ext))
+        files = glob.glob(os.path.join(relative_path, '*' + ext))
         for f in files:
             os.remove(f)   
 
-    clean_dir(CWD, SAVE_DATA, 'png')
-    clean_dir(CWD, BAD_BBOX, 'png')
-    clean_dir(CWD, JSON_FRAMES, 'json')
-    clean_dir(CWD, JSON_LABELS, 'json')
-    clean_dir(CWD, video_path, 'mp4')
+    clean_dir(SAVE_DATA, 'png')
+    clean_dir(BAD_BBOX, 'png')
+    clean_dir(JSON_FRAMES, 'json')
+    clean_dir(JSON_LABELS, 'json')
+    clean_dir(VIDEO, 'mp4')
 
     print('data directories emptied')
     

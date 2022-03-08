@@ -5,20 +5,20 @@ from libraries.visualize import *
 import subprocess
 
 
-CWD = os.getcwd()
-LABELS = 'labels/'
-SAVE_DATA = 'data/frames/'
-BAD_BBOX = 'outputs/bad_bbox/'
-JSON_FRAMES = 'outputs/json_frames/'
-JSON_LABELS = 'outputs/json_labels/'
-VIDEO = 'data/input_video/'
+# CWD = os.getcwd()
+LABELS = '${HOME}/pose_compare/labels/'
+SAVE_DATA = '${HOME}/pose_compare/data/frames/'
+BAD_BBOX = '${HOME}/pose_compare/outputs/bad_bbox/'
+JSON_FRAMES = '${HOME}/pose_compare/outputs/json_frames/'
+JSON_LABELS = '${HOME}/pose_compare/outputs/json_labels/'
+VIDEO = '${HOME}/pose_compare/data/input_video/'
 TH = 80.0
 
 
-def run(action_id, video_path):
+def run_pose_compare(action_id, video_path):
 
     # first clean directories
-    clean_directories(CWD, SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
+    clean_directories(SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
 
 
     # convert video to frames
@@ -41,26 +41,26 @@ def run(action_id, video_path):
         # to know how to get per frame json, use number of frames in the list
 
 
-        command = 'python3 third_party/scripts/demo_inference.py \
-                        --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-                        --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
-                        --indir data/label/ \
-                        --outdir outputs/json_label/'
+        command = 'python3 ${HOME}/pose_compare/third_party/scripts/demo_inference.py \
+                        --cfg ${HOME}/pose_compare/third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
+                        --checkpoint ${HOME}/pose_compare/third_party/pretrained_models/fast_res50_256x192.pth \
+                        --indir ${HOME}/pose_compare/data/label/ \
+                        --outdir ${HOME}/pose_compare/outputs/json_label/'
                 
         p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 
 
-        command = 'python3 third_party/scripts/demo_inference.py \
-                    --cfg third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-                    --checkpoint third_party/pretrained_models/fast_res50_256x192.pth \
-                    --indir data/frames/ \
-                    --outdir outputs/json/'
+        command = 'python3 ${HOME}/pose_compare/third_party/scripts/demo_inference.py \
+                    --cfg ${HOME}/pose_compare/third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
+                    --checkpoint ${HOME}/pose_compare/third_party/pretrained_models/fast_res50_256x192.pth \
+                    --indir ${HOME}/pose_compare/data/frames/ \
+                    --outdir ${HOME}/pose_compare/outputs/json/'
 
         p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
 
         # normalize
-        label_json_normalized = l2_normalize('outputs/json_labels/alphapose-results.json')
-        frames_json_normalized = l2_normalize('outputs/json_frames/alphapose-results.json')
+        label_json_normalized = l2_normalize('${HOME}/pose_compare/outputs/json_labels/alphapose-results.json')
+        frames_json_normalized = l2_normalize('${HOME}/pose_compare/outputs/json_frames/alphapose-results.json')
 
         # get action label (account for jpg and png types)
         action_label = [el for el in label_json_normalized if el['image_id'] == action_id + '.jpg'] + \

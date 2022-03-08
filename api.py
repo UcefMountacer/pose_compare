@@ -47,7 +47,7 @@ def load_username():
         RESPONSE['data'] = {}
         return jsonify(RESPONSE)
     
-    scores = run(action_id= action_Id , video_path= video_path)
+    scores = run_pose_compare(action_id= action_Id , video_path= video_path)
 
     if scores == []:
         RESPONSE['status'] = False
