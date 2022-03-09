@@ -2,7 +2,7 @@ import os
 import glob
 import cv2
 
-def video_to_frames(path_vid, save_path):
+def video_to_frames(path_vid):
 
     ''' 
     read video and return list of frames

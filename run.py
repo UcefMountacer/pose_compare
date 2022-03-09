@@ -4,7 +4,6 @@ from libraries.score import *
 from libraries.visualize import *
 from third_party.inference import *
 
-
 CWD = os.getcwd()
 LABELS         = os.path.join(CWD ,'labels/')
 BAD_BBOX       = os.path.join(CWD ,'outputs/bad_bbox/')
