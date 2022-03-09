@@ -11,12 +11,13 @@ def video_to_frames(path_vid):
     vidcap = cv2.VideoCapture(path_vid)
     list_frames = []
     k = 0
+    i = 0
     success,image = vidcap.read()
     try:
         while success:
             success,image = vidcap.read()
             
-            if i%10 == 0:
+            if i%20 == 0:
                 list_frames.append(image)
                 k = k+1
             i = i+1
@@ -48,13 +49,16 @@ def get_action_image(action_id, LABELS):
     get action id (like 1.1) and return image frame for label
     '''
 
-    path_lb = os.path.join(LABELS , action_id + '.png')
+    path_lb = os.path.join(LABELS , action_id + '.jpg')
     label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
 
-    if label == None:
-      path_lb = os.path.join(LABELS , action_id + '.jpg')
-      label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
+    if label != None:
+        return label
 
-    return label
+    if label == None:
+        path_lb = os.path.join(LABELS , action_id + '.png')
+        label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
+        return label
+    
 
     

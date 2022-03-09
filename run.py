@@ -16,7 +16,7 @@ TH = 80.0
 def run_pose_compare(net, action_id, video):
 
     # first clean directories
-    clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
+    # clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
 
     # convert video to frames
     list_frames, nbr_frames = video_to_frames(os.path.join(VIDEO,video))
@@ -47,13 +47,17 @@ def run_pose_compare(net, action_id, video):
         list_bad_bbox = bad_scores_box(frame_data, scores, TH)
 
         # save images of bbox
-        save_bbox_img(list_bad_bbox , list_frames[frame_index], BAD_BBOX)
+        list_arrays = save_bbox_img(list_bad_bbox , list_frames[frame_index], BAD_BBOX)
 
         print('bad poses saved, scores calculated from left to right')
 
-        return scores
+        return scores, list_arrays
 
 
+
+# net = load_model()
+
+# scores = run_pose_compare(net, '3.1', 'test.mp4')
     
 
 

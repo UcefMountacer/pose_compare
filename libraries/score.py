@@ -23,7 +23,7 @@ def cos_sim(res_label, res):
     score_list = []
     final_scores = []
 
-    label = res_label[1]['keypoints']
+    label = res_label[0][0]['keypoints']
 
     for pose in res:
         ip_kpt = pose['keypoints']
@@ -55,7 +55,8 @@ def cos_sim(res_label, res):
 
     # sort poses from left to right
 
-    l = find_centers(res).sort(key=lambda x:x[1])
+    l = find_centers(res)
+    l.sort(key=lambda x:x[1])
     ind = [t[0] for t in l]
     ordered_scores = [final_scores[i] for i in ind]
 
@@ -183,3 +184,5 @@ def save_bbox_img(list_bbox , frame_array, sav_path):
         bim = frame_array[b:d,a:c]
         cv2.imwrite(os.path.join(sav_path, 'box_' + str(i) + '.png') , bim)
         list_arrays.append(bim)
+
+    return list_arrays

@@ -3,11 +3,11 @@ import cv2
 import numpy as np
 import torch
 
-from models.with_mobilenet import PoseEstimationWithMobileNet
-from modules.keypoints import extract_keypoints, group_keypoints
-from modules.load_state import load_state
-from modules.pose import Pose
-from val import normalize, pad_width
+from third_party.models.with_mobilenet import PoseEstimationWithMobileNet
+from third_party.modules.keypoints import extract_keypoints, group_keypoints
+from third_party.modules.load_state import load_state
+from third_party.modules.pose import Pose
+from third_party.val import normalize, pad_width
 
 
 def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
