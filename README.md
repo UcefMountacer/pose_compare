@@ -4,7 +4,7 @@ compare video of poses to labels and return a score of similarity
 # Installation
 for Ubuntu
 
-## 0- install virtualenv an setup a virtual environment
+## install virtualenv an setup a virtual environment
 
 1- Update the server and install python dependencies
 
@@ -36,45 +36,16 @@ python3 -m venv .env
 source .env/bin/activate
 ```
 
-## 1-installation of packages inside virtual env
+## installation of packages inside virtual env
 
 ```
 pip install -r requirements.txt
-sudo apt-get install libyaml-dev
 ```
 
-## 2-run setup.py
+## test
 
 ```
-cd ${HOME}/pose_compare/third_party
-python setup.py build develop
-```
-
-## 3-get models weights
-
-link = https://drive.google.com/uc?id=1RAznEMAcXNwEWolIi6il_9BAJqREgZiY&export=download
-
-```
-cd ${HOME}/pose_compare/weights
-gdown https://drive.google.com/uc?id=1RAznEMAcXNwEWolIi6il_9BAJqREgZiY
-```
-
-unzip the weight model, and move weights to their respective locations
-
-```
-unzip -q weights.zip
-```
-
-
-```
-cd ${HOME}/pose_compare
-
-mkdir third_party/detector/yolo/data
-mkdir third_party/detector/tracker/data
-
-mv weights/yolov3-spp.weights third_party/detector/yolo/data/
-mv weights/JDE-1088x608-uncertainty third_party/detector/tracker/data/
-mv weights/fast_res50_256x192.pth third_party/pretrained_models/
+python third_party/demo.py --checkpoint-path third_party/checkpoint_iter_370000.pth --images data/demo.png --cpu
 ```
 
 # For deployment to server
