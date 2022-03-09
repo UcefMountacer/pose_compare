@@ -2,27 +2,28 @@
 from libraries.processing import *
 from libraries.score import *
 from libraries.visualize import *
-import subprocess
+from third_party.inference import *
 
 
-# CWD = os.getcwd()
-LABELS = '${HOME}/pose_compare/labels/'
-SAVE_DATA = '${HOME}/pose_compare/data/frames/'
-BAD_BBOX = '${HOME}/pose_compare/outputs/bad_bbox/'
-JSON_FRAMES = '${HOME}/pose_compare/outputs/json_frames/'
-JSON_LABELS = '${HOME}/pose_compare/outputs/json_labels/'
-VIDEO = '${HOME}/pose_compare/data/input_video/'
+CWD = os.getcwd()
+LABELS         = os.path.join(CWD ,'labels/')
+BAD_BBOX       = os.path.join(CWD ,'outputs/bad_bbox/')
+JSON_FRAMES    = os.path.join(CWD ,'outputs/json_frames/')
+JSON_LABELS    = os.path.join(CWD ,'outputs/json_labels/')
+VIDEO          = os.path.join(CWD ,'data/')
 TH = 80.0
 
 
-def run_pose_compare(action_id, video_path):
+def run_pose_compare(net, action_id, video):
 
     # first clean directories
-    clean_directories(SAVE_DATA, BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
-
+    clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
 
     # convert video to frames
-    nbr_frames = video_to_frames(video_path, SAVE_DATA)
+    list_frames, nbr_frames = video_to_frames(os.path.join(VIDEO,video))
+
+    # get action label
+    label = get_action_image(action_id, LABELS)
 
     if nbr_frames == 0:
 
@@ -31,59 +32,25 @@ def run_pose_compare(action_id, video_path):
     
     if nbr_frames > 0:
 
-        # action image (label)
-        # get_action_image(action_id, LABELS, SAVE_LABEL)   # pose estimate for all labels
+        # run for images
+        all_res = run_demo(net,list_frames)
 
-        # run pose estimation for label and all frames
-        # label first, then 
-        # other frames
-        # output json will contain all
-        # to know how to get per frame json, use number of frames in the list
-
-
-        command = 'python3 ${HOME}/pose_compare/third_party/scripts/demo_inference.py \
-                        --cfg ${HOME}/pose_compare/third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-                        --checkpoint ${HOME}/pose_compare/third_party/pretrained_models/fast_res50_256x192.pth \
-                        --indir ${HOME}/pose_compare/data/label/ \
-                        --outdir ${HOME}/pose_compare/outputs/json_label/'
-                
-        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-
-
-        command = 'python3 ${HOME}/pose_compare/third_party/scripts/demo_inference.py \
-                    --cfg ${HOME}/pose_compare/third_party/configs/coco/resnet/256x192_res50_lr1e-3_1x.yaml \
-                    --checkpoint ${HOME}/pose_compare/third_party/pretrained_models/fast_res50_256x192.pth \
-                    --indir ${HOME}/pose_compare/data/frames/ \
-                    --outdir ${HOME}/pose_compare/outputs/json/'
-
-        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-
-        # normalize
-        label_json_normalized = l2_normalize('${HOME}/pose_compare/outputs/json_labels/alphapose-results.json')
-        frames_json_normalized = l2_normalize('${HOME}/pose_compare/outputs/json_frames/alphapose-results.json')
-
-        # get action label (account for jpg and png types)
-        action_label = [el for el in label_json_normalized if el['image_id'] == action_id + '.jpg'] + \
-                    [el for el in label_json_normalized if el['image_id'] == action_id + '.png'] 
-
-        # divide json into parts for each frame
-        list_frames_data = divide_json_frames(frames_json_normalized, nbr_frames)
+        # run for images
+        res_label = run_demo(net,[label])
 
         # get median score for all frames and get max : this is the frame
-        frame_data, frame_name = get_median_score_per_frame_and_max(list_frames_data , action_label)
+        frame_data, frame_index = get_median_score_per_frame_and_max(all_res , res_label)
 
         # get scores for this frame
-        scores = cos_sim(action_label , frame_data)
-
-        # print(scores)
+        scores = cos_sim(res_label , frame_data)
 
         #save bounding box of bad ppl pose (under 90)
         list_bad_bbox = bad_scores_box(frame_data, scores, TH)
 
         # save images of bbox
-        save_bbox_img(list_bad_bbox , SAVE_DATA, frame_name, BAD_BBOX)
+        save_bbox_img(list_bad_bbox , list_frames[frame_index], BAD_BBOX)
 
-        print('bad poses saved, scores calculated')
+        print('bad poses saved, scores calculated from left to right')
 
         return scores
 

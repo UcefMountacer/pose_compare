@@ -13,30 +13,35 @@ def read_json(json_path):
     return file
 
 
-def cos_sim(action_label, ip_data):
+def cos_sim(res_label, res):
+
+    '''
+    take list of poses in image (res) and poses in label (res_label)
+    return score
+    '''
 
     score_list = []
     final_scores = []
-    
-    label = action_label[0]['keypoints']
 
-    for k in range(len(ip_data)):
-        ip_kpt = ip_data[k]['keypoints']
+    label = res_label[1]['keypoints']
+
+    for pose in res:
+        ip_kpt = pose['keypoints']
         ip_list = []
         label_list = []
 
-        for _ in range(17):
+        for kpoint, kpoint_label in zip(ip_kpt,label):
             temp_ip = []
             temp_la = []
-            ip_list.append(ip_kpt[_ * 3])
-            ip_list.append(ip_kpt[_ * 3 + 1])
-            label_list.append(label[_ * 3])
-            label_list.append(label[_ * 3 + 1])
+            ip_list.append(kpoint[0])
+            ip_list.append(kpoint[1])
+            label_list.append(kpoint_label[0])
+            label_list.append(kpoint_label[1])
 
-            temp_ip.append(ip_kpt[_ * 3])
-            temp_ip.append(ip_kpt[_ * 3 + 1])
-            temp_la.append(label[_ * 3])
-            temp_la.append(label[_ * 3 + 1])
+            temp_ip.append(kpoint[0])
+            temp_ip.append(kpoint[1])
+            temp_la.append(kpoint_label[0])
+            temp_la.append(kpoint_label[1])
 
             cs_temp = np.dot(temp_ip, temp_la) / \
                 (np.linalg.norm(temp_ip)*np.linalg.norm(temp_la))
@@ -46,11 +51,26 @@ def cos_sim(action_label, ip_data):
             (np.linalg.norm(ip_list)*np.linalg.norm(label_list))
         score = ((2 - np.sqrt(2 * (1 - cs_temp))) / 2) * 100
 
-        # print(score)
         final_scores.append(score)
 
-    return final_scores
+    # sort poses from left to right
 
+    l = find_centers(res).sort(key=lambda x:x[1])
+    ind = [t[0] for t in l]
+    ordered_scores = [final_scores[i] for i in ind]
+
+    return ordered_scores
+
+
+def find_centers(res):
+  
+    l = []
+    for i,p in enumerate(res):
+        yc = p['yc']
+        xc = p['xc']
+        l.append([i,xc,yc])
+    
+    return l
 
 
 def l2_normalize(jsonfile):
@@ -101,40 +121,36 @@ def l2_normalize(jsonfile):
                 keypoints[_ * 3 + 1] = (keypoints[_ * 3 + 1] - sub_y) / norm
                 json_kps[frame]['keypoints'] = keypoints
 
-    # with open(jsonfile.replace('.json', '_l2norm.json'), 'w') as f:
-    #     json.dump(json_kps, f)
-    #     print('Write l2_norm keypoints')
-
     return json_kps
 
 
 
-def divide_json_frames(json_frames, nbr_frames):
+# def divide_json_frames(json_frames, nbr_frames):
     
 
-    length = len(json_frames)
-    n = length // nbr_frames
+#     length = len(json_frames)
+#     n = length // nbr_frames
 
-    list_frames_data = [json_frames[i:i + n] for i in range(0, len(json_frames), n)]
+#     list_frames_data = [json_frames[i:i + n] for i in range(0, len(json_frames), n)]
 
-    return list_frames_data
+#     return list_frames_data
 
 
-def get_median_score_per_frame_and_max(list_frames_data, label_norm):
+def get_median_score_per_frame_and_max(all_res, res_label):
 
     list_sscores = []
 
-    for frame_data in list_frames_data:
+    for res in all_res:
 
-        scores = cos_sim(label_norm , frame_data)
+        scores = cos_sim(res_label , res)
         median = np.mean(scores)
         list_sscores.append(median)
 
     # max_score = np.max(LIST_SCORES)
-    frame_data = list_frames_data[np.argmax(list_sscores)]
-    frame_name = frame_data[0]['image_id']
+    frame_data = all_res[np.argmax(list_sscores)]
+    frame_index = frame_data[0]['image_index']
 
-    return frame_data, frame_name
+    return frame_data, frame_index
 
 
 def bad_scores_box(frame_data, scores, TH):
@@ -151,19 +167,19 @@ def bad_scores_box(frame_data, scores, TH):
     return list_bad_bbox
 
 
-def save_bbox_img(list_bbox , path, frame_name, sav_path):
+def save_bbox_img(list_bbox , frame_array, sav_path):
 
-    #read image first
-    fr_path = os.path.join(path, frame_name)
-    frame = cv2.imread(fr_path)
+
+    list_arrays = []
 
     #get bbox
     for i,box in enumerate(list_bbox):
-        [a,b,c,d] = box
+        [(a,b),(c,d)] = box
         a = int(a)
         b = int(b)
         c = int(c)
         d = int(d)
 
-        bim = frame[b:b+d,a:a+c]
-        cv2.imwrite(os.path.join(sav_path, frame_name[:-4] + '_box_' + str(i) + '.png') , bim)
+        bim = frame_array[b:d,a:c]
+        cv2.imwrite(os.path.join(sav_path, 'box_' + str(i) + '.png') , bim)
+        list_arrays.append(bim)
