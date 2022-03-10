@@ -1,11 +1,11 @@
-torch>=0.4.1
-torchvision>=0.2.1
+torch==1.10.2+cpu
+torchvision==0.11.3+cpu
+numpy==1.19.5
+opencv_contrib_python==4.5.5.62
+Pillow==9.0.1
 Flask==2.0.2
 Flask_Cors==3.0.10
-natsort
-numpy
-opencv_contrib_python
-pycocotools
+natsort==8.1.0
 tqdm
 virtualenv
 gunicorn

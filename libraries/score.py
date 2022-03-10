@@ -156,17 +156,22 @@ def get_median_score_per_frame_and_max(all_res, res_label):
 
 def bad_scores_box(frame_data, scores, TH):
 
-    list_bad_bbox = []
+    # list_bad_bbox = []
 
-    for sc, element in zip(scores, frame_data):
+    # for sc, element in zip(scores, frame_data):
 
-        if sc < TH:
+    #     if sc < TH:
 
-            box = element['box']
-            list_bad_bbox.append(box)
+    #         box = element['box']
+    #         list_bad_bbox.append(box)
 
-    return list_bad_bbox
+    # return list_bad_bbox
 
+    box = frame_data[np.argmin(scores)]['box']
+
+    return [box]
+
+    
 
 def save_bbox_img(list_bbox , frame_array, sav_path):
 

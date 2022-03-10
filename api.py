@@ -2,6 +2,7 @@ import os
 from flask import (Flask, jsonify, request)
 from flask_cors import CORS
 import io
+import base64
 from PIL import Image
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ RESPONSE = {
     'status': False,
     'message': '',
     'data': {
-        'score': [],
+        'scores': [],
         'bad_poses': []
     }
 }
@@ -28,6 +29,7 @@ def home():
 
     RESPONSE['status'] = True
     RESPONSE['message'] = 'Nothing here, call the API'
+    RESPONSE['data'] = {}
     return jsonify(RESPONSE)
 
 
@@ -53,25 +55,21 @@ def pose_compare():
         net = load_model()
         scores , list_arrays = run_pose_compare(net, action_Id, video_path)
 
-        b = io.BytesIO()
-        for i,im in enumerate(list_arrays):
-            im = Image.fromarray(np.uint8(im*255))
-            im.save(b, format="jpeg")
-            b.seek(0)
-
         if scores == []:
             RESPONSE['status'] = False
             RESPONSE['message'] = 'video is empty'
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
+
+        _, buffer = cv2.imencode('.png', list_arrays[0])
+        s = base64.b64encode(buffer).decode("utf-8")
         
         RESPONSE['status'] = True
         RESPONSE['message'] = 'pose comparison done Succesfully'
         RESPONSE['data']['scores'] = scores
-        RESPONSE['data']['bad_poses'] = str(b.read())
+        RESPONSE['data']['bad_poses'] = s
 
         return jsonify(RESPONSE)
-
 
 
 
