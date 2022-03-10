@@ -1,6 +1,6 @@
-numpy==1.19.5
+numpy
 opencv_contrib_python==4.5.5.62
-Pillow==9.0.1
+Pillow
 Flask==2.0.2
 Flask_Cors==3.0.10
 natsort==8.1.0
