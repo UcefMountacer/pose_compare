@@ -18,11 +18,15 @@ def run_pose_compare(net, action_id, video):
     # first clean directories
     # clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
 
+    print('starting pose estimation...')
+
     # convert video to frames
     list_frames, nbr_frames = video_to_frames(os.path.join(VIDEO,video))
+    print('video to frames conversion done')
 
     # get action label
     label = get_action_image(action_id, LABELS)
+    print('label found successfully')
 
     if nbr_frames == 0:
 
@@ -33,9 +37,11 @@ def run_pose_compare(net, action_id, video):
 
         # run for images
         all_res = run_demo(net,list_frames)
+        print('pose done for video')
 
         # run for images
         res_label = run_demo(net,[label])
+        print('poses done for label')
 
         # get median score for all frames and get max : this is the frame
         frame_data, frame_index = get_median_score_per_frame_and_max(all_res , res_label)

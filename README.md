@@ -51,7 +51,15 @@ python third_party/demo.py --checkpoint-path third_party/checkpoint_iter_370000.
 
 # For deployment to server
 
-Please refer to https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
+
+Please refer to https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
+
+to install nginx
+
+and https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
+
+to deploy
+
 
 Here are the predone config file that can be used directly by modifying username
 
@@ -67,7 +75,7 @@ Description=gunicorn daemon
 After=network.target
 
 [Service]
-User=ubuntu
+User=ecs-assist-user
 Group=www-data
 Environment="APP_ENV=PRD"
 WorkingDirectory=/home/ubuntu/pose_compare
@@ -88,13 +96,14 @@ WantedBy=multi-user.target
 
 
 server {
-    listen 80;
-    server_name 18.183.56.10;
+    server_name 47.107.31.64;
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/home/ubuntu/pose_compare/pose_compare.sock;
+        proxy_pass http://unix:/home/ecs-assist-user/pose_compare/pose_compare.sock;
     }
+
 }
+
 
 ```

@@ -40,6 +40,8 @@ def pose_compare():
         action_Id = request.args.get('actionid')
         video_path = request.args.get('video_path')
 
+        print('request received')
+
         if not action_Id:
             RESPONSE['status'] = False
             RESPONSE['message'] = 'action Id is required'

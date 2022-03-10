@@ -48,7 +48,7 @@ def run_demo(net, images_list, height_size=256):
 
     for i, img in enumerate(images_list):
 
-        print('inferencing for a frame...')
+        # print('inferencing for a frame...')
       
         heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=1)
 
@@ -73,7 +73,7 @@ def run_demo(net, images_list, height_size=256):
             pose = Pose(pose_keypoints, pose_entries[n][18])
             current_poses.append(pose)
 
-        print('post processing pose data...')
+        # print('post processing pose data...')
 
         res = []
         for pose in current_poses:
@@ -86,7 +86,7 @@ def run_demo(net, images_list, height_size=256):
             d['image_index'] = i
             res.append(d) 
 
-        print('done')
+        # print('done')
 
         All_res.append(res)
 
@@ -97,5 +97,7 @@ def load_model():
     net = PoseEstimationWithMobileNet()
     checkpoint = torch.load('third_party/checkpoint_iter_370000.pth', map_location='cpu')
     load_state(net, checkpoint)
+
+    print('model loaded')
 
     return net
