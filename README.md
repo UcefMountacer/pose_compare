@@ -39,7 +39,8 @@ source .env/bin/activate
 ## installation of packages inside virtual env
 
 ```
-pip install -r requirements.txt
+pip3 install torch==1.10.2+cpu torchvision==0.11.3+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+pip3 install -r requirements.txt
 ```
 
 ## test
