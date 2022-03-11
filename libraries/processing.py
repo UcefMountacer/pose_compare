@@ -52,14 +52,6 @@ def get_action_image(action_id, LABELS):
     path_lb = os.path.join(LABELS , action_id + '.jpg')
     label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
 
-    # if label != None:
-    #     return label
-
-    # if label == None:
-    #     path_lb = os.path.join(LABELS , action_id + '.png')
-    #     label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
-    #     return label
-
     return label
     
 
