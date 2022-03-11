@@ -8,7 +8,7 @@ from third_party.modules.keypoints import extract_keypoints, group_keypoints
 from third_party.modules.load_state import load_state
 from third_party.modules.pose import Pose
 from third_party.val import normalize, pad_width
-
+from libraries.processing import *
 
 def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
                pad_value=(0, 0, 0), img_mean=np.array([128, 128, 128], np.float32), img_scale=np.float32(1/256)):
@@ -110,8 +110,14 @@ if __name__ == '__main__':
 
     print('model loaded')
 
-    img = cv2.imread(args.image, cv2.IMREAD_COLOR)
+    # img = cv2.imread(args.image, cv2.IMREAD_COLOR)
 
-    All_res = run_demo(net, [img])
+    url = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+
+    list_frames, nbr_frames = video_to_frames(url)
+
+    print(nbr_frames)
+
+    All_res = run_demo(net, list_frames)
 
     print(All_res)
