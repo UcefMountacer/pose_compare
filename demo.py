@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
     # img = cv2.imread(args.image, cv2.IMREAD_COLOR)
 
-    url = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    url = 'data/test.mp4'
 
     list_frames, nbr_frames = video_to_frames(url)
 
