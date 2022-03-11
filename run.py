@@ -9,11 +9,11 @@ LABELS         = os.path.join(CWD ,'labels/')
 BAD_BBOX       = os.path.join(CWD ,'outputs/bad_bbox/')
 JSON_FRAMES    = os.path.join(CWD ,'outputs/json_frames/')
 JSON_LABELS    = os.path.join(CWD ,'outputs/json_labels/')
-VIDEO          = os.path.join(CWD ,'data/')
+# VIDEO          = os.path.join(CWD ,'data/')
 TH = 80.0
 
 
-def run_pose_compare(net, action_id, video):
+def run_pose_compare(net, action_id, video_url):
 
     # first clean directories
     # clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO)
@@ -21,7 +21,7 @@ def run_pose_compare(net, action_id, video):
     print('starting pose estimation...')
 
     # convert video to frames
-    list_frames, nbr_frames = video_to_frames(os.path.join(VIDEO,video))
+    list_frames, nbr_frames = video_to_frames(video_url)
     print('video to frames conversion done')
 
     # get action label

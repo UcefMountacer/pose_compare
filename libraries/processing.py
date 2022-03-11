@@ -2,13 +2,13 @@ import os
 import glob
 import cv2
 
-def video_to_frames(path_vid):
+def video_to_frames(url_vid):
 
     ''' 
     read video and return list of frames
     '''
 
-    vidcap = cv2.VideoCapture(path_vid)
+    vidcap = cv2.VideoCapture(url_vid)
     list_frames = []
     k = 0
     i = 0

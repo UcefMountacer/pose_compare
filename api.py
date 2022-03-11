@@ -34,11 +34,11 @@ def home():
 
 
 
-@app.route('/pose_compare' , methods=['GET' , 'POST'])
+@app.route('/pose_compare')
 def pose_compare():
 
-        action_Id = request.args.get('actionid')
-        video_path = request.args.get('video_path')
+        action_Id = request.args.get('actionId')
+        video_path = request.args.get('videoUrl')
 
         print('request received')
 

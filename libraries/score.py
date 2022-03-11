@@ -187,7 +187,7 @@ def save_bbox_img(list_bbox , frame_array, sav_path):
         d = int(d)
 
         bim = frame_array[b:d,a:c]
-        cv2.imwrite(os.path.join(sav_path, 'box_' + str(i) + '.png') , bim)
+        # cv2.imwrite(os.path.join(sav_path, 'box_' + str(i) + '.png') , bim)
         list_arrays.append(bim)
 
     return list_arrays
