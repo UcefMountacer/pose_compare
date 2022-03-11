@@ -46,15 +46,21 @@ pip3 install -r requirements.txt
 ## test
 
 ```
-python third_party/demo.py --checkpoint-path third_party/checkpoint_iter_370000.pth --images data/demo.png --cpu
+python3 demo.py
+
+or
+
+python3 demo.py --image --checkpoint
 ```
+
+it should print a json file containing pose infos of each person in the data/demo.png image
 
 # For deployment to server
 
 
 Please refer to https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
 
-to install nginx
+to install nginx (part 1 and 2 of the guide)
 
 and https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 
