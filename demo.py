@@ -95,47 +95,48 @@ def run_demo(net, images_list, height_size=256):
     return All_res
 
 
-net = PoseEstimationWithMobileNet()
-checkpoint = torch.load('third_party/checkpoint_iter_370000.pth', map_location='cpu')
-load_state(net, checkpoint)
+# net = PoseEstimationWithMobileNet()
+# checkpoint = torch.load('third_party/checkpoint_iter_370000.pth', map_location='cpu')
+# load_state(net, checkpoint)
 
-print('model loaded')
+# print('model loaded')
 
-img = cv2.imread('data/demo.png', cv2.IMREAD_COLOR)
+# img = cv2.imread('data/demo.png', cv2.IMREAD_COLOR)
 
-All_res = run_demo(net, [img])
+# All_res = run_demo(net, [img])
 
-print(All_res)
+# print(All_res)
 
-res_norm = l2_normalize(All_res[0])
-
-
+# res_norm = l2_normalize(All_res[0])
 
 
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser(
-#         description='''Lightweight human pose estimation python demo.
-#                        This is just for quick results preview.
-#                        Please, consider c++ demo for the best performance.''')
-#     parser.add_argument('--checkpoint',default = 'third_party/checkpoint_iter_370000.pth',type=str, help='path to the checkpoint')
-#     parser.add_argument('--image', nargs='+', default='data/demo.png', help='path to input image(s)')
 
-#     args = parser.parse_args()
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(
+        description='''Lightweight human pose estimation python demo.
+                       This is just for quick results preview.
+                       Please, consider c++ demo for the best performance.''')
+    parser.add_argument('--checkpoint',default = 'third_party/checkpoint_iter_370000.pth',type=str, help='path to the checkpoint')
+    parser.add_argument('--image', nargs='+', default='data/demo.png', help='path to input image(s)')
+
+    args = parser.parse_args()
     
-#     net = PoseEstimationWithMobileNet()
-#     checkpoint = torch.load(args.checkpoint, map_location='cpu')
-#     load_state(net, checkpoint)
+    net = PoseEstimationWithMobileNet()
+    checkpoint = torch.load(args.checkpoint, map_location='cpu')
+    load_state(net, checkpoint)
 
-#     print('model loaded')
+    print('model loaded')
 
-#     img = cv2.imread(args.image, cv2.IMREAD_COLOR)
+    # img = cv2.imread(args.image, cv2.IMREAD_COLOR)
 
-#     # url = 'data/test.mp4'
+    url = '/var/www/html/aiscore/server/uploads/test.mp4'
 
-#     # list_frames, nbr_frames = video_to_frames(url)
+    list_frames, nbr_frames = video_to_frames(url)
 
-#     # print(nbr_frames)
+    print(nbr_frames)
 
-#     All_res = run_demo(net, [img])
+    All_res = run_demo(net, list_frames)
 
-#     print(All_res)
+    print(All_res)
