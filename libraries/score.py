@@ -74,53 +74,70 @@ def find_centers(res):
     return l
 
 
-def l2_normalize(jsonfile):
+def l2_normalize(json_kps):
 
     '''
     input json output from model and normalize it
     return json data
     '''
 
-    with open(jsonfile) as kps:
-        json_kps = json.load(kps)
+    for frame in range(len(json_kps)):
+        keypoints = json_kps[frame]['keypoints']
+        # box = json_kps[frame]['box']
+        
+        # box = []
+        # box.append(json_kps[frame]['box'][1][0])
+        # box.append(json_kps[frame]['box'][1][1])
+        # box.append(json_kps[frame]['box'][0][0])
+        # box.append(json_kps[frame]['box'][0][1])
 
-        for frame in range(len(json_kps)):
-            keypoints = json_kps[frame]['keypoints']
-            box = json_kps[frame]['box']
-            temp_x = np.abs(box[0] - box[2]) / 2
-            temp_y = np.abs(box[1] - box[3]) / 2
+        box = []
+        box.append(json_kps[frame]['bbox'][0])
+        box.append(json_kps[frame]['bbox'][1])
+        box.append(json_kps[frame]['bbox'][2])
+        box.append(json_kps[frame]['bbox'][3])
 
-            if temp_x <= temp_y:
-                if box[0] <= box[2]:
-                    sub_x = box[0] - (temp_y - temp_x)
-                else:
-                    sub_x = box[2] - (temp_y - temp_x)
+        
+        temp_x = json_kps[frame]['xc']
+        temp_y = json_kps[frame]['yc']
 
-                if box[1] <= box[3]:
-                    sub_y = box[1]
-                else:
-                    sub_y = box[3]
+
+        if temp_x <= temp_y:
+            if box[0] <= box[2]:
+                sub_x = box[0] - (temp_y - temp_x)
             else:
-                if box[1] <= box[3]:
-                    sub_y = box[1] - (temp_x - temp_y)
-                else:
-                    sub_y = box[3] - (temp_x - temp_y)
+                sub_x = box[2] - (temp_y - temp_x)
 
-                if box[0] <= box[2]:
-                    sub_x = box[0]
-                else:
-                    sub_x = box[2]
+            if box[1] <= box[3]:
+                sub_y = box[1]
+            else:
+                sub_y = box[3]
+        else:
+            if box[1] <= box[3]:
+                sub_y = box[1] - (temp_x - temp_y)
+            else:
+                sub_y = box[3] - (temp_x - temp_y)
 
-            temp = []
-            for _ in range(17):
-                temp.append(keypoints[_ * 3] - sub_x)
-                temp.append(keypoints[_ * 3 + 1] - sub_y)
+            if box[0] <= box[2]:
+                sub_x = box[0]
+            else:
+                sub_x = box[2]
 
-            norm = np.linalg.norm(temp)
-            for _ in range(17):
-                keypoints[_ * 3] = (keypoints[_ * 3] - sub_x) / norm
-                keypoints[_ * 3 + 1] = (keypoints[_ * 3 + 1] - sub_y) / norm
-                json_kps[frame]['keypoints'] = keypoints
+        temp = []
+        for _ in range(18):
+            # temp.append(keypoints[_ * 3] - sub_x)
+            # temp.append(keypoints[_ * 3 + 1] - sub_y)
+
+            temp.append(keypoints[_][0]- sub_x)
+            temp.append(keypoints[_][1]- sub_y)
+
+        norm = np.linalg.norm(temp)
+
+        for _ in range(18):
+            keypoints[_][0] = (keypoints[_][0] - sub_x) / norm
+            keypoints[_][1] = (keypoints[_][1] - sub_y) / norm
+
+            json_kps[frame]['keypoints'] = keypoints
 
     return json_kps
 
@@ -148,7 +165,7 @@ def get_median_score_per_frame_and_max(all_res, res_label):
         list_sscores.append(median)
 
     # max_score = np.max(LIST_SCORES)
-    frame_data = all_res[np.argmax(list_sscores)]
+    frame_data = all_res[np.argmax(list_sscores[2:])]
     frame_index = frame_data[0]['image_index']
 
     return frame_data, frame_index

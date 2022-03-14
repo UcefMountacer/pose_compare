@@ -61,11 +61,11 @@ def run_pose_compare(net, action_id, video_url):
 
 
 
-net = load_model()
+# net = load_model()
 
-url = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+# url = 'data/test.mp4'
 
-scores = run_pose_compare(net, '3.1', url)
+# scores = run_pose_compare(net, '3.1', url)
     
 
 

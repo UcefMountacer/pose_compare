@@ -17,7 +17,7 @@ def video_to_frames(url_vid):
         while success:
             success,image = vidcap.read()
             
-            if i%5 == 0:
+            if i%10 == 0:
                 list_frames.append(image)
                 k = k+1
             i = i+1
