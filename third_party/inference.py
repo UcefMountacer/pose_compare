@@ -49,8 +49,12 @@ def run_demo(net, images_list, height_size=256):
     for i, img in enumerate(images_list):
 
         # print('inferencing for a frame...')
-      
-        heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=1)
+
+        try:
+            heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=1)
+        except:
+            print('issue with a frame')
+            continue
 
         total_keypoints_num = 0
         all_keypoints_by_type = []
