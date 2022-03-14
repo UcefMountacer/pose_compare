@@ -48,7 +48,7 @@ def run_demo(net, images_list, height_size=256):
 
     for i, img in enumerate(images_list):
 
-        # print('inferencing for a frame...')
+        print('inferencing for frame ', str(i))
 
         try:
             heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=1)
