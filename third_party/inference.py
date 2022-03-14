@@ -77,7 +77,7 @@ def run_demo(net, images_list, height_size=256):
             pose = Pose(pose_keypoints, pose_entries[n][18])
             current_poses.append(pose)
 
-        # print('post processing pose data...')
+        print('post processing pose data...')
 
         res = []
         for pose in current_poses:
