@@ -28,7 +28,7 @@ RESPONSE = {
 def home():
 
     RESPONSE['status'] = True
-    RESPONSE['message'] = 'Nothing here, call the API'
+    RESPONSE['message'] = 'call the API using url'
     RESPONSE['data'] = {}
     return jsonify(RESPONSE)
 
