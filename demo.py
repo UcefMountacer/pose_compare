@@ -132,7 +132,7 @@ if __name__ == '__main__':
 
     # img = cv2.imread(args.image, cv2.IMREAD_COLOR)
 
-    url = 'http://120.76.140.117:8080/static/test.mp4'
+    url = 'http://47.106.99.86:8080/static/test.mp4'
 
     list_frames, nbr_frames = video_to_frames(url)
 
