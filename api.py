@@ -1,4 +1,5 @@
 import os
+import threading
 from flask import (Flask, jsonify, request)
 from flask_cors import CORS
 import io
@@ -77,5 +78,5 @@ def pose_compare():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
 
