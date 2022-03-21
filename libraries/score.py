@@ -4,14 +4,6 @@ import json
 import os
 import cv2
 
-def read_json(json_path):
-
-    with open(json_path) as f:
-        file = json.load(f)
-
-    print(len(file))
-    return file
-
 
 def cos_sim(res_label, res):
 
@@ -20,7 +12,6 @@ def cos_sim(res_label, res):
     return score
     '''
 
-    score_list = []
     final_scores = []
 
     label = res_label[0][0]['keypoints']
@@ -31,21 +22,11 @@ def cos_sim(res_label, res):
         label_list = []
 
         for kpoint, kpoint_label in zip(ip_kpt,label):
-            temp_ip = []
-            temp_la = []
+
             ip_list.append(kpoint[0])
             ip_list.append(kpoint[1])
             label_list.append(kpoint_label[0])
             label_list.append(kpoint_label[1])
-
-            temp_ip.append(kpoint[0])
-            temp_ip.append(kpoint[1])
-            temp_la.append(kpoint_label[0])
-            temp_la.append(kpoint_label[1])
-
-            cs_temp = np.dot(temp_ip, temp_la) / \
-                (np.linalg.norm(temp_ip)*np.linalg.norm(temp_la))
-            score_list.append(((2 - np.sqrt(2 * (1 - cs_temp))) / 2) * 100)
 
         cs_temp = np.dot(ip_list, label_list) / \
             (np.linalg.norm(ip_list)*np.linalg.norm(label_list))
@@ -74,87 +55,9 @@ def find_centers(res):
     return l
 
 
-def l2_normalize(json_kps):
-
-    '''
-    input json output from model and normalize it
-    return json data
-    '''
-
-    for frame in range(len(json_kps)):
-        keypoints = json_kps[frame]['keypoints']
-        # box = json_kps[frame]['box']
-        
-        # box = []
-        # box.append(json_kps[frame]['box'][1][0])
-        # box.append(json_kps[frame]['box'][1][1])
-        # box.append(json_kps[frame]['box'][0][0])
-        # box.append(json_kps[frame]['box'][0][1])
-
-        box = []
-        box.append(json_kps[frame]['bbox'][0])
-        box.append(json_kps[frame]['bbox'][1])
-        box.append(json_kps[frame]['bbox'][2])
-        box.append(json_kps[frame]['bbox'][3])
-
-        
-        temp_x = json_kps[frame]['xc']
-        temp_y = json_kps[frame]['yc']
 
 
-        if temp_x <= temp_y:
-            if box[0] <= box[2]:
-                sub_x = box[0] - (temp_y - temp_x)
-            else:
-                sub_x = box[2] - (temp_y - temp_x)
-
-            if box[1] <= box[3]:
-                sub_y = box[1]
-            else:
-                sub_y = box[3]
-        else:
-            if box[1] <= box[3]:
-                sub_y = box[1] - (temp_x - temp_y)
-            else:
-                sub_y = box[3] - (temp_x - temp_y)
-
-            if box[0] <= box[2]:
-                sub_x = box[0]
-            else:
-                sub_x = box[2]
-
-        temp = []
-        for _ in range(18):
-            # temp.append(keypoints[_ * 3] - sub_x)
-            # temp.append(keypoints[_ * 3 + 1] - sub_y)
-
-            temp.append(keypoints[_][0]- sub_x)
-            temp.append(keypoints[_][1]- sub_y)
-
-        norm = np.linalg.norm(temp)
-
-        for _ in range(18):
-            keypoints[_][0] = (keypoints[_][0] - sub_x) / norm
-            keypoints[_][1] = (keypoints[_][1] - sub_y) / norm
-
-            json_kps[frame]['keypoints'] = keypoints
-
-    return json_kps
-
-
-
-# def divide_json_frames(json_frames, nbr_frames):
-    
-
-#     length = len(json_frames)
-#     n = length // nbr_frames
-
-#     list_frames_data = [json_frames[i:i + n] for i in range(0, len(json_frames), n)]
-
-#     return list_frames_data
-
-
-def get_median_score_per_frame_and_max(all_res, res_label):
+def get_pose_score(all_res, res_label):
 
     list_sscores = []
 

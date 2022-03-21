@@ -1,10 +1,10 @@
-import os
-import threading
+
+
 from flask import (Flask, jsonify, request)
 from flask_cors import CORS
-import io
 import base64
-from PIL import Image
+from third_party.OpenPose.net import *
+from third_party.MtCnn.detector import *
 
 app = Flask(__name__)
 
@@ -54,9 +54,17 @@ def pose_compare():
             RESPONSE['message'] = 'video is required'
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
+
+        if action_Id != '1.1':
         
-        net = load_model()
-        scores , list_arrays = run_pose_compare(net, action_Id, video_path)
+            net = load_model()
+            scores , bad_pose = run_pose_compare(net, action_Id, video_path)
+
+        if action_Id == '1.1':
+
+            det = init_detector()
+            scores , bad_pose = run_face_compare(det, action_Id, video_path)
+
 
         if scores == []:
             RESPONSE['status'] = False
@@ -64,7 +72,7 @@ def pose_compare():
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
 
-        _, buffer = cv2.imencode('.png', list_arrays[0])
+        _, buffer = cv2.imencode('.png', bad_pose)
         s = base64.b64encode(buffer).decode("utf-8")
         
         RESPONSE['status'] = True
@@ -73,7 +81,6 @@ def pose_compare():
         RESPONSE['data']['bad_poses'] = s
 
         return jsonify(RESPONSE)
-
 
 
 

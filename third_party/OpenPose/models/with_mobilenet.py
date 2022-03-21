@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from third_party.modules.conv import conv, conv_dw, conv_dw_no_bn
+from third_party.OpenPose.modules.conv import conv, conv_dw, conv_dw_no_bn
 
 
 class Cpm(nn.Module):

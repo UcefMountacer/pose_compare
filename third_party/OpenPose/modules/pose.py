@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-from third_party.modules.keypoints import BODY_PARTS_KPT_IDS, BODY_PARTS_PAF_IDS
-from third_party.modules.one_euro_filter import OneEuroFilter
+from third_party.OpenPose.modules.keypoints import BODY_PARTS_KPT_IDS, BODY_PARTS_PAF_IDS
+from third_party.OpenPose.modules.one_euro_filter import OneEuroFilter
 
 
 class Pose:
