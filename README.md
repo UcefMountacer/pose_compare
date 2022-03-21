@@ -38,8 +38,11 @@ source .env/bin/activate
 
 ## installation of packages inside virtual env
 
+torch and tensorflow require separate commands :
+
 ```
 pip3 install torch==1.10.2+cpu torchvision==0.11.3+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+pip3 install --upgrade tensorflow -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
 pip3 install -r requirements.txt
 ```
 
