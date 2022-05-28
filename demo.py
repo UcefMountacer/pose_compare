@@ -10,8 +10,7 @@ from third_party.OpenPose.modules.pose import Pose
 from third_party.OpenPose.val import normalize, pad_width
 from libraries.processing import *
 from libraries.score import *
-from third_party.OpenPose.inference import *
-
+from third_party.OpenPose.net import *
 
 
 
@@ -119,7 +118,7 @@ if __name__ == '__main__':
         description='''Lightweight human pose estimation python demo.
                        This is just for quick results preview.
                        Please, consider c++ demo for the best performance.''')
-    parser.add_argument('--checkpoint',default = 'third_party/checkpoint_iter_370000.pth',type=str, help='path to the checkpoint')
+    parser.add_argument('--checkpoint',default = 'third_party/OpenPose/checkpoint_iter_370000.pth',type=str, help='path to the checkpoint')
     parser.add_argument('--image', nargs='+', default='data/demo.png', help='path to input image(s)')
 
     args = parser.parse_args()

@@ -92,6 +92,7 @@ def run_face_compare(det, action_id, video_url):
         return scores, bad_face
 
 
+# from third_party.OpenPose.net import *
 
 # net = load_model()
 
