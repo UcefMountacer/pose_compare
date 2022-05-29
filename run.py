@@ -4,6 +4,8 @@ from libraries.processing import *
 from libraries.visualize import *
 from libraries.openpose import *
 from libraries.face_analysis import *
+from third_party.OpenPose.net import *
+
 
 CWD = os.getcwd()
 LABELS = os.path.join(CWD ,'labels/')
@@ -92,7 +94,6 @@ def run_face_compare(det, action_id, video_url):
         return scores, bad_face
 
 
-# from third_party.OpenPose.net import *
 
 # net = load_model()
 

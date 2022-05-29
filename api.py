@@ -19,10 +19,12 @@ RESPONSE = {
     'status': False,
     'message': '',
     'data': {
-        'scores': [],
+        'result': [],
         'bad_poses': []
     }
 }
+
+LIST_ACTION = ['1.1,.......,']
 
 
 @app.route('/')
@@ -38,35 +40,62 @@ def home():
 @app.route('/pose_compare')
 def pose_compare():
 
-        action_Id = request.args.get('actionId')
+        action_times = request.args.get('actionTimes')
+
         video_path = request.args.get('videoUrl')
 
         print('request received')
 
-        if not action_Id:
+        if not action_times:
             RESPONSE['status'] = False
-            RESPONSE['message'] = 'action Id is required'
+            RESPONSE['message'] = 'action times frame is required'
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
 
         if not video_path:
             RESPONSE['status'] = False
-            RESPONSE['message'] = 'video is required'
+            RESPONSE['message'] = 'video path is required'
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
 
-        if action_Id != '1.1':
         
-            net = load_model()
-            scores , bad_pose = run_pose_compare(net, action_Id, video_path)
+        net = load_model()
+        det = init_detector()
 
-        if action_Id == '1.1':
+        # scores , bad_pose = run_pose_compare(net, action_Id, video_path)
+        # scores , bad_pose = run_face_compare(det, action_Id, video_path)
 
-            det = init_detector()
-            scores , bad_pose = run_face_compare(det, action_Id, video_path)
+        results = []
+
+        list_times = split_times_string(action_times)
+
+        list_frames, nbr_frames, fps = video_to_frames_noFPS(video_path)
+        print('video to frames conversion done')
+
+        for time, i in enumerate(list_times):
+
+            action_id = LIST_ACTION[i]
+
+            sec = convert_time_to_sec(time)
+
+            frame_index = (sec+1) * fps
+
+            frame = list_frames[frame_index-1]
+
+            if action_id == '1.1':
+
+                scores = run_face_compare(det, action_id, frame)
+
+            else :
+
+                scores = run_pose_compare(net, action_id, frame)
+
+            bad_pose = 'TO DO'
+
+            results.append([action_id,scores])
 
 
-        if scores == []:
+        if results == []:
             RESPONSE['status'] = False
             RESPONSE['message'] = 'video is empty'
             RESPONSE['data'] = {}
@@ -77,7 +106,7 @@ def pose_compare():
         
         RESPONSE['status'] = True
         RESPONSE['message'] = 'pose comparison done Succesfully'
-        RESPONSE['data']['scores'] = scores
+        RESPONSE['data']['result'] = results
         RESPONSE['data']['bad_poses'] = s
 
         return jsonify(RESPONSE)
