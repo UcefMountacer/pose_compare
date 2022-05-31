@@ -40,17 +40,17 @@ def home():
 @app.route('/pose_compare')
 def pose_compare():
 
-        action_times = request.args.get('actionTimes')
+        # action_times = request.args.get('actionTimes')
 
         video_path = request.args.get('videoUrl')
 
         print('request received')
 
-        if not action_times:
-            RESPONSE['status'] = False
-            RESPONSE['message'] = 'action times frame is required'
-            RESPONSE['data'] = {}
-            return jsonify(RESPONSE)
+        # if not action_times:
+        #     RESPONSE['status'] = False
+        #     RESPONSE['message'] = 'action times frame is required'
+        #     RESPONSE['data'] = {}
+        #     return jsonify(RESPONSE)
 
         if not video_path:
             RESPONSE['status'] = False
@@ -67,7 +67,9 @@ def pose_compare():
 
         results = []
 
-        list_times = split_times_string(action_times)
+        # list_times = split_times_string(action_times)
+
+        list_times = get_times()
 
         list_frames, nbr_frames, fps = video_to_frames_noFPS(video_path)
         print('video to frames conversion done')
