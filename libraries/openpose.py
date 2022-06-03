@@ -182,6 +182,7 @@ def score_pose(res_label, res):
     label = res_label[0][0]['keypoints']
 
     for pose in res:
+
         ip_kpt = pose['keypoints']
         ip_list = []
         label_list = []
@@ -247,6 +248,18 @@ def get_pose_score(all_res, res_label):
     scores  = score_pose(res_label , frame_data)
 
     return scores, frame_data, frame_index
+
+
+def get_pose_score_action30(res, res_label):
+
+    '''
+    res : pose dictionnaries of all persons in one frame
+    res_label : pose dict of label
+    '''
+
+    scores  = score_pose(res_label , res[0])
+
+    return scores
 
 
 def bad_scores_box(frame_data, scores, frame_array):

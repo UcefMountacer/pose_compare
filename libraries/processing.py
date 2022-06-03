@@ -52,10 +52,16 @@ def get_action_image(action_id: str, LABELS: str) -> np.ndarray:
     get action id (like 1.1) and return image frame for label
     '''
 
-    path_lb = os.path.join(LABELS , action_id + '.jpg')
+    path_lb = os.path.join(LABELS , action_id + '.png')
     label = cv2.imread(path_lb, cv2.IMREAD_COLOR)
 
     return label
+
+
+
+'''
+functions for new version : whole video in one api call for 23 actions
+'''
     
 
 def convert_time_to_sec(str: str) -> int:
@@ -109,8 +115,24 @@ def get_times() -> list:
     return sorted(result)
 
 
+def get_acions() -> list:
 
-def video_to_frames_noFPS(url_vid: str) -> tuple:
+    '''
+    get actions from yaml file
+    return list of actions
+    '''
+
+    outfile = open('data/actions.yaml')
+        
+    dict = yaml.load(outfile, Loader=yaml. FullLoader)
+
+    actions = list(dict.values())
+
+    return actions
+
+
+
+def video_to_frames_noFPS(url_vid: str) -> list:
 
     ''' 
     read video and return list of frames
@@ -124,19 +146,22 @@ def video_to_frames_noFPS(url_vid: str) -> tuple:
     k = 0
     i = 0
     success,image = vidcap.read()
+    
     try:
         while success:
             success,image = vidcap.read()
             
-            list_frames.append(image)
-
+            if i % round(fps) == 0:
+                list_frames.append(image)
+                k = k+1
+            i = i+1
     except:
         pass
 
-    return list_frames, len(list_frames), int(fps)
+    return list_frames
 
 
-def extract_frames(times: list, frames: list, fps: int):
+def extract_frames(times: list, frames: list) -> list:
 
     '''
     extract frames at specific times in the list of action times
@@ -153,11 +178,9 @@ def extract_frames(times: list, frames: list, fps: int):
 
     for i, sec in enumerate(times):
 
-        frame_index = (sec+1) * fps
-        frame = frames[frame_index-1]
+        frame = frames[sec]
 
         result.append(frame)
-
 
     return result
 
@@ -168,8 +191,22 @@ def extract_frames(times: list, frames: list, fps: int):
 
 # print(get_times())
 
-list_frames, _, fps = video_to_frames_noFPS('data/test.mp4')
+# print(get_acions())
+
+# list_frames = video_to_frames_noFPS('data/test.mp4')
 
 # list_times = get_times()
 
-# res = extract_frames(list_times,list_frames,fps)
+# actions = get_acions()
+
+# res = extract_frames(list_times,list_frames)
+
+# path = 'data/test_extraction'
+
+# for i,r in enumerate(res):
+
+#     p = os.path.join(path , actions[i] + '.png')
+
+#     cv2.imwrite(p,r)
+
+

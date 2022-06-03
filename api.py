@@ -13,7 +13,7 @@ IMAGES_PATH = 'outputs/bad_bbox/'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
-from run import *
+from run_v2 import *
 
 RESPONSE = {
     'status': False,
@@ -24,8 +24,7 @@ RESPONSE = {
     }
 }
 
-LIST_ACTION = ['1.1,.......,']
-
+LIST_ACTION = get_acions()
 
 @app.route('/')
 def home():
@@ -40,17 +39,9 @@ def home():
 @app.route('/pose_compare')
 def pose_compare():
 
-        # action_times = request.args.get('actionTimes')
-
         video_path = request.args.get('videoUrl')
 
         print('request received')
-
-        # if not action_times:
-        #     RESPONSE['status'] = False
-        #     RESPONSE['message'] = 'action times frame is required'
-        #     RESPONSE['data'] = {}
-        #     return jsonify(RESPONSE)
 
         if not video_path:
             RESPONSE['status'] = False
@@ -62,42 +53,35 @@ def pose_compare():
         net = load_model()
         det = init_detector()
 
-        # scores , bad_pose = run_pose_compare(net, action_Id, video_path)
-        # scores , bad_pose = run_face_compare(det, action_Id, video_path)
-
         results = []
-
-        # list_times = split_times_string(action_times)
 
         list_times = get_times()
 
-        list_frames, nbr_frames, fps = video_to_frames_noFPS(video_path)
-        print('video to frames conversion done')
+        list_frames = video_to_frames_noFPS(video_path)
+        print('video to frames conversion done ...')
 
-        for time, i in enumerate(list_times):
+        action_frames = extract_frames(list_times,list_frames)
+        print('action frames were extracted ...')
+
+        for i, frame in enumerate(action_frames):
 
             action_id = LIST_ACTION[i]
 
-            sec = convert_time_to_sec(time)
+            if action_id == '1.1-Smile':
 
-            frame_index = (sec+1) * fps
+                scores, bad_face = run_face_compare(det, action_id, frame)
 
-            frame = list_frames[frame_index-1]
-
-            if action_id == '1.1':
-
-                scores = run_face_compare(det, action_id, frame)
+                results.append([action_id,scores])
 
             else :
 
-                scores = run_pose_compare(net, action_id, frame)
+                scores, bad_pose = run_pose_compare(net, action_id, frame)
 
-            bad_pose = 'TO DO'
-
-            results.append([action_id,scores])
+                results.append([action_id,scores])
 
 
         if results == []:
+            
             RESPONSE['status'] = False
             RESPONSE['message'] = 'video is empty'
             RESPONSE['data'] = {}

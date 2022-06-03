@@ -96,6 +96,8 @@ if __name__ == "__main__":
 
     for l in labels:
 
+        print(l)
+
         img_path = os.path.join(labels_path , l)
         img = cv2.imread(img_path)
 

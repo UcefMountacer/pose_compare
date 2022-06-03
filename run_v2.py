@@ -8,7 +8,7 @@ from third_party.OpenPose.net import *
 
 
 CWD = os.getcwd()
-LABELS = os.path.join(CWD ,'labels/')
+LABELS = os.path.join(CWD ,'labels/originals')
 
 
 '''
@@ -42,14 +42,14 @@ def run_pose_compare(net, action_id, frame):
     print('poses done for label')
 
     # get median score for all frames and get max : this is the frame
-    scores, frame_data, frame_index = get_pose_score(res , res_label)
+    scores = get_pose_score_action30(res , res_label)
 
     #save bounding box of bad ppl pose (under 90)
-    # bad_pose = bad_scores_box(frame_data, scores, list_frames[frame_index])
+    bad_pose = bad_scores_box(res[0], scores, frame)
 
     print('bad poses saved, scores calculated from left to right')
 
-    return scores
+    return scores, bad_pose
 
         
 
@@ -73,20 +73,35 @@ def run_face_compare(det, action_id, frame):
     scores, frame_boxes, frame_index = get_face_score(kpts, label_kpts, boxes)
 
     #save bounding box of bad ppl pose (under 90)
-    # bad_face = face_bad_scores_box(frame_boxes, scores, list_frames[frame_index])
+    bad_face = face_bad_scores_box(frame_boxes, scores, frame)
 
     print('bad face saved, scores calculated from left to right')
 
-    return scores
+    return scores, bad_face
 
 
 
 # net = load_model()
-
-# url = 'data/test.mp4'
-
-# scores = run_pose_compare(net, '3.1', url)
     
+# list_frames = video_to_frames_noFPS('data/test.mp4')
+
+# list_times = get_times()
+
+# LIST_ACTION = get_acions()
+
+# action_frames = extract_frames(list_times,list_frames)
+
+# results = []
+
+# for i, frame in enumerate(action_frames):
+
+#     action_id = LIST_ACTION[i]
+
+#     scores, bad_pose = run_pose_compare(net, action_id, frame)
+
+#     results.append([action_id,scores])
+
+# print(results)
 
 
 
