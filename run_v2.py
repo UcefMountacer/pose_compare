@@ -5,7 +5,8 @@ from libraries.visualize import *
 from libraries.openpose import *
 from libraries.face_analysis import *
 from third_party.OpenPose.net import *
-
+import base64
+import json
 
 CWD = os.getcwd()
 LABELS = os.path.join(CWD ,'labels/originals')
@@ -70,7 +71,7 @@ def run_face_compare(det, action_id, frame):
     print('face done for label')
 
     # get median score for all frames and get max : this is the frame
-    scores, frame_boxes, frame_index = get_face_score(kpts, label_kpts, boxes)
+    scores, frame_boxes = get_face_score(kpts, label_kpts, boxes)
 
     #save bounding box of bad ppl pose (under 90)
     bad_face = face_bad_scores_box(frame_boxes, scores, frame)
@@ -79,6 +80,15 @@ def run_face_compare(det, action_id, frame):
 
     return scores, bad_face
 
+
+
+
+
+# RESPONSE = {
+#     'status': False,
+#     'message': '',
+#     'data': []
+# }
 
 
 # net = load_model()
@@ -99,10 +109,18 @@ def run_face_compare(det, action_id, frame):
 
 #     scores, bad_pose = run_pose_compare(net, action_id, frame)
 
-#     results.append([action_id,scores])
+#     _, buffer = cv2.imencode('.png', bad_pose)
+#     s = base64.b64encode(buffer).decode("utf-8")
 
-# print(results)
+#     results.append([action_id, scores, s])
 
+# RESPONSE['status'] = True
+# RESPONSE['message'] = 'pose comparison done Succesfully'
+# RESPONSE['data'] = results
+
+
+# with open('data.json', 'w') as fp:
+#     json.dump(RESPONSE, fp)
 
 
 
