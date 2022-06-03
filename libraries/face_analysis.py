@@ -1,6 +1,6 @@
 
 import numpy as np
-
+import math
 
 
 def run_detection(det, frame):
@@ -161,6 +161,7 @@ def get_face_score(All_kpts, label_kpts, All_boxes):
         list_scores.append(median)
 
     # max_score = np.max(LIST_SCORES)
+    list_scores = [0 if math.isnan(x) else x for x in list_scores]
     frame_kpts = All_kpts[np.argmax(list_scores)]
     frame_boxes = All_boxes[np.argmax(list_scores)]
     index = np.argmax(list_scores)

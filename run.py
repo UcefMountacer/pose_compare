@@ -8,7 +8,7 @@ from third_party.OpenPose.net import *
 
 
 CWD = os.getcwd()
-LABELS = os.path.join(CWD ,'labels/')
+LABELS = os.path.join(CWD ,'labels/originals')
 
 
 def run_pose_compare(net, action_id, video_url):
@@ -31,7 +31,8 @@ def run_pose_compare(net, action_id, video_url):
     if nbr_frames > 0:
 
         #take last 5 images only
-        list_frames = list_frames[-5:]
+        # list_frames = list_frames[-5:]
+        list_frames = list_frames[-5:-1]
 
         # run for images
         all_res = run_posenet(net,list_frames)
@@ -73,7 +74,8 @@ def run_face_compare(det, action_id, video_url):
     if nbr_frames > 0:
 
         #take last 5 images only
-        list_frames = list_frames[-5:]
+        # list_frames = list_frames[-5:]
+        list_frames = list_frames[-5:-1]
 
         # run for images
         all_kpts, all_boxes = run_mtcnn(det, list_frames)

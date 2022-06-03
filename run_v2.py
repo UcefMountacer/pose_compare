@@ -26,7 +26,7 @@ if action x at 0010, so at 10 sec, we take the 10th 24 frames block, and choose 
 '''
 
 
-def run_pose_compare(net, action_id, frame):
+def run_pose_compare_v2(net, action_id, frame):
 
     print('starting pose estimation...')
 
@@ -54,7 +54,7 @@ def run_pose_compare(net, action_id, frame):
 
         
 
-def run_face_compare(det, action_id, frame):
+def run_face_compare_v2(det, action_id, frame):
 
     print('starting face estimation...')
 

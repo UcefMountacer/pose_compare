@@ -7,3 +7,4 @@ Flask_Cors==3.0.10
 natsort==8.1.0
 tqdm
 gunicorn
+pyyaml
