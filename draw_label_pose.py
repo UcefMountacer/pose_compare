@@ -89,20 +89,26 @@ net = net.eval()
 
 if __name__ == "__main__":
 
-    labels_path = 'labels/originals'
-    res_path = 'labels/results'
+    # labels_path = 'labels/originals'
+    # res_path = 'labels/results'
 
-    labels = os.listdir(labels_path)
+    # labels = os.listdir(labels_path)
 
-    for l in labels:
+    # for l in labels:
 
-        print(l)
+    #     print(l)
 
-        img_path = os.path.join(labels_path , l)
-        img = cv2.imread(img_path)
+    #     img_path = os.path.join(labels_path , l)
+    #     img = cv2.imread(img_path)
 
-        res = run_for_label(img)
-        path = os.path.join(res_path , l)
+    #     res = run_for_label(img)
+    #     path = os.path.join(res_path , l)
 
-        cv2.imwrite(path , res)
+    #     cv2.imwrite(path , res)
+
+    img = cv2.imread('assis.png')
+
+    res = run_for_label(img)
+    
+    print('done')
 

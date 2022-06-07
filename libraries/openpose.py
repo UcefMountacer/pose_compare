@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 import torch
-
+import math
 from third_party.OpenPose.models.with_mobilenet import PoseEstimationWithMobileNet
 from third_party.OpenPose.modules.keypoints import extract_keypoints, group_keypoints
 from third_party.OpenPose.modules.load_state import load_state
@@ -242,6 +242,7 @@ def get_pose_score(all_res, res_label):
         list_scores.append(median)
 
     # max_score = np.max(LIST_SCORES)
+    list_scores = [0 if math.isnan(x) else x for x in list_scores]
     frame_data = all_res[np.argmax(list_scores[2:])]
     frame_index = frame_data[0]['image_index']
 

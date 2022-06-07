@@ -99,9 +99,11 @@ def run_face_compare(det, action_id, video_url):
 
 # net = load_model()
 
-# url = 'data/test.mp4'
+# path = '/home/youssef/DATA/upwork project airchina/pose_comparison_code/pose_compare/data/test_assistant'
 
-# scores = run_pose_compare(net, '3.1', url)
+# video = path + 'Blow-4.8.mp4'
+
+# scores = run_pose_compare(net, '4.8', video)
     
 
 

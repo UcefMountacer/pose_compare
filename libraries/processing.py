@@ -20,14 +20,14 @@ def video_to_frames(url_vid: str) -> tuple:
         while success:
             success,image = vidcap.read()
             
-            if i%15 == 0:
-                list_frames.append(image)
-                k = k+1
-            i = i+1
+            # if i%15 == 0:
+            list_frames.append(image)
+            #     k = k+1
+            # i = i+1
     except:
         pass
 
-    return list_frames, k
+    return list_frames, len(list_frames) # k
 
 
 # def clean_directories(BAD_BBOX, JSON_FRAMES, JSON_LABELS, VIDEO):

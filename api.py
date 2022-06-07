@@ -129,6 +129,13 @@ def pose_compare_action30():
 
         for i, frame in enumerate(action_frames):
 
+            action_dict = {
+                        'category': '',
+                        'scores': [],
+                        'image': []
+                    }
+
+
             action_id = LIST_ACTION[i]
 
             if action_id == '1.1-Smile':
@@ -138,7 +145,11 @@ def pose_compare_action30():
                 
                 s = base64.b64encode(buffer).decode("utf-8")
 
-                results.append([action_id, scores, s])
+                action_dict['category'] = action_id
+                action_dict['scores'] = scores
+                action_dict['image'] = s
+
+                results.append(action_dict)
 
             else :
 
@@ -147,7 +158,11 @@ def pose_compare_action30():
                 
                 s = base64.b64encode(buffer).decode("utf-8")
 
-                results.append([action_id, scores, s])
+                action_dict['category'] = action_id
+                action_dict['scores'] = scores
+                action_dict['image'] = s
+
+                results.append(action_dict)
 
 
         if results == []:

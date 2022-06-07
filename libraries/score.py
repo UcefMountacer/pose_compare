@@ -3,7 +3,7 @@ import numpy as np
 import json
 import os
 import cv2
-
+import math
 
 def cos_sim(res_label, res):
 
@@ -68,6 +68,7 @@ def get_pose_score(all_res, res_label):
         list_sscores.append(median)
 
     # max_score = np.max(LIST_SCORES)
+    list_sscores = [0 if math.isnan(x) else x for x in list_sscores]
     frame_data = all_res[np.argmax(list_sscores[2:])]
     frame_index = frame_data[0]['image_index']
 
