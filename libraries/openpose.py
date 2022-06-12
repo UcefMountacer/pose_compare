@@ -274,6 +274,7 @@ def bad_scores_box(frame_data, scores, frame_array):
     c = int(c)
     d = int(d)
 
+    # bim = frame_array[b-100:d+100,a-100:c+100]    # increase size by 100 pixels
     bim = frame_array[b:d,a:c]
 
     return bim

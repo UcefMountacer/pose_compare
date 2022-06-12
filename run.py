@@ -1,6 +1,5 @@
 
 from libraries.processing import *
-# from libraries.score import *
 from libraries.visualize import *
 from libraries.openpose import *
 from libraries.face_analysis import *

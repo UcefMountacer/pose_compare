@@ -57,12 +57,12 @@ def pose_compare():
             RESPONSE['data'] = {}
             return jsonify(RESPONSE)
 
-        if action_Id != '1.1_v2':
+        if action_Id != '1.1':
         
             net = load_model()
             scores , bad_pose = run_pose_compare(net, action_Id, video_path)
 
-        if action_Id == '1.1_v2':
+        if action_Id == '1.1':
 
             det = init_detector()
             scores , bad_pose = run_face_compare(det, action_Id, video_path)
@@ -129,6 +129,8 @@ def pose_compare_action30():
 
         for i, frame in enumerate(action_frames):
 
+            print(i)
+
             action_dict = {
                         'category': '',
                         'scores': [],
@@ -138,7 +140,7 @@ def pose_compare_action30():
 
             action_id = LIST_ACTION[i]
 
-            if action_id == '1.1-Smile':
+            if action_id == '1.1':
 
                 scores, bad_face = run_face_compare_v2(det, action_id, frame)
                 _, buffer = cv2.imencode('.png', bad_face)

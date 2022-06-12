@@ -187,6 +187,7 @@ def face_bad_scores_box(frame_boxes, scores, frame):
     x2 = int(x2)
     y2 = int(y2)
 
+    # bim = frame[y-50:y2+50,x-50:x2+50]         # increase size by 50 pixels
     bim = frame[y:y2,x:x2]
 
     return bim
