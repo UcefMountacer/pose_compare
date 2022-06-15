@@ -28,6 +28,11 @@ RESPONSE = {
     }
 }
 
+# empty image in base64 format
+empty_image = cv2.imread('data/empty_pose.png')
+_, buffer = cv2.imencode('.png', empty_image)
+EMPTY_IMAGE = base64.b64encode(buffer).decode("utf-8")
+
 @app.route('/')
 def home():
 
@@ -72,7 +77,7 @@ def pose_compare():
             RESPONSE['status'] = False
             RESPONSE['message'] = 'machine learning model did not detect any human'
             RESPONSE['data']['scores'] = 0
-            RESPONSE['data']['bad_poses'] = ''
+            RESPONSE['data']['bad_poses'] = EMPTY_IMAGE
             return jsonify(RESPONSE)
 
         _, buffer = cv2.imencode('.png', bad_pose)
@@ -90,6 +95,7 @@ def pose_compare():
 action 30
 '''
 
+# action 30 response dict for each action
 RESPONSE_action30 = {
     'status': False,
     'message': '',
@@ -97,7 +103,7 @@ RESPONSE_action30 = {
 }
 
 
-
+# list of actions and times
 LIST_ACTION = get_acions()
 LIST_TIMES = get_times()
 
@@ -167,7 +173,7 @@ def pose_compare_action30():
 
                 action_dict['category'] = action_id
                 action_dict['scores'] = 0
-                action_dict['image'] = ''
+                action_dict['image'] = EMPTY_IMAGE
 
                 results.append(action_dict)
 
