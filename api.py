@@ -129,6 +129,15 @@ def pose_compare_action30():
         list_frames = video_to_frames_noFPS(video_path)
         print('video to frames conversion done ...')
 
+        if len(list_frames) < 156:
+
+            #video small
+            RESPONSE_action30['status'] = False
+            RESPONSE_action30['message'] = 'video is small'
+            RESPONSE_action30['data'] = []
+            return jsonify(RESPONSE_action30)
+
+
         action_frames = extract_frames(LIST_TIMES,list_frames)
         print('action frames were extracted ...')
 
@@ -165,7 +174,13 @@ def pose_compare_action30():
 
             # else :
 
-            scores, bad_pose = run_pose_compare_v2(net, action_id, frame)
+            try:
+
+                scores, bad_pose = run_pose_compare_v2(net, action_id, frame)
+
+            except:
+
+                scores = []
 
             if scores == []:
 
