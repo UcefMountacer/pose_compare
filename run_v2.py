@@ -28,19 +28,19 @@ if action x at 0010, so at 10 sec, we take the 10th 24 frames block, and choose 
 
 def run_pose_compare_v2(net, action_id, frame):
 
-    print('starting pose estimation...')
+    # print('starting pose estimation...')
 
     # get action label
     label = get_action_image(action_id, LABELS)
-    print('label found successfully')
+    # print('label found successfully')
 
     # run for image
     res = run_posenet(net,[frame])
-    print('pose done for video frame')
+    # print('pose done for video frame')
 
     # run for label
     res_label = run_posenet(net,[label])
-    print('poses done for label')
+    # print('poses done for label')
 
     # get median score for all frames and get max : this is the frame
     scores = get_pose_score_action30(res , res_label)
@@ -48,7 +48,7 @@ def run_pose_compare_v2(net, action_id, frame):
     #save bounding box of bad ppl pose (under 90)
     bad_pose = bad_scores_box(res[0], scores, frame)
 
-    print('bad poses saved, scores calculated from left to right')
+    # print('bad poses saved, scores calculated from left to right')
 
     return scores, bad_pose
 
@@ -56,19 +56,19 @@ def run_pose_compare_v2(net, action_id, frame):
 
 def run_face_compare_v2(det, action_id, frame):
 
-    print('starting face estimation...')
+    # print('starting face estimation...')
 
     # get action label
     label = get_action_image(action_id, LABELS)
-    print('label found successfully')
+    # print('label found successfully')
 
     # run for images
     kpts, boxes = run_mtcnn(det, [frame])
-    print('faces done for video frame')
+    # print('faces done for video frame')
 
     # run for images
     label_kpts, _ = run_mtcnn(det, [label])
-    print('face done for label')
+    # print('face done for label')
 
     # get median score for all frames and get max : this is the frame
     scores, frame_boxes = get_face_score(kpts, label_kpts, boxes)
@@ -76,7 +76,7 @@ def run_face_compare_v2(det, action_id, frame):
     #save bounding box of bad ppl pose (under 90)
     bad_face = face_bad_scores_box(frame_boxes, scores, frame)
 
-    print('bad face saved, scores calculated from left to right')
+    # print('bad face saved, scores calculated from left to right')
 
     return scores, bad_face
 

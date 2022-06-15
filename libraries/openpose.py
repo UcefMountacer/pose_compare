@@ -57,7 +57,7 @@ def frame_detection(net, frame, i):
     upsample_ratio = 4
     num_keypoints = Pose.num_kpts
 
-    print('inferencing for frame ', str(i))
+    # print('inferencing for frame ', str(i))
 
     heatmaps, pafs, scale, pad = infer_fast(net, frame)
     
@@ -82,7 +82,7 @@ def frame_detection(net, frame, i):
         pose = Pose(pose_keypoints, pose_entries[n][18])
         current_poses.append(pose)
 
-    print('post processing pose data...')
+    # print('post processing pose data...')
 
     res = []
     for pose in current_poses:

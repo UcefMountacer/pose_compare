@@ -115,7 +115,7 @@ def pose_compare_action30():
 
         video_path = request.args.get('videoUrl')
 
-        print('request received')
+        print('request received, now processing action 30')
 
         if not video_path:
             RESPONSE_action30['status'] = False
@@ -145,8 +145,6 @@ def pose_compare_action30():
 
         for i, frame in enumerate(action_frames):
 
-            print(i)
-
             action_dict = {
                         'category': '',
                         'scores': [],
@@ -173,6 +171,8 @@ def pose_compare_action30():
             #     results.append(action_dict)
 
             # else :
+
+            print('running machine learning for frame :', i)
 
             try:
 
