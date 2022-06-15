@@ -70,8 +70,9 @@ def pose_compare():
 
         if scores == []:
             RESPONSE['status'] = False
-            RESPONSE['message'] = 'video is empty'
-            RESPONSE['data'] = {}
+            RESPONSE['message'] = 'machine learning model did not detect any human'
+            RESPONSE['data']['scores'] = 0
+            RESPONSE['data']['bad_poses'] = ''
             return jsonify(RESPONSE)
 
         _, buffer = cv2.imencode('.png', bad_pose)
@@ -100,8 +101,6 @@ RESPONSE_action30 = {
 LIST_ACTION = get_acions()
 LIST_TIMES = get_times()
 
-net = load_model()
-det = init_detector()
 
 
 
@@ -127,6 +126,8 @@ def pose_compare_action30():
         action_frames = extract_frames(LIST_TIMES,list_frames)
         print('action frames were extracted ...')
 
+        net = load_model()
+
         for i, frame in enumerate(action_frames):
 
             print(i)
@@ -140,22 +141,40 @@ def pose_compare_action30():
 
             action_id = LIST_ACTION[i]
 
-            if action_id == '1.1':
+            # this part is for face detection
+            # not included in action 30
 
-                scores, bad_face = run_face_compare_v2(det, action_id, frame)
-                _, buffer = cv2.imencode('.png', bad_face)
+            # if action_id == '1.1':
+
+            #     scores, bad_face = run_face_compare_v2(det, action_id, frame)
+            #     _, buffer = cv2.imencode('.png', bad_face)
                 
-                s = base64.b64encode(buffer).decode("utf-8")
+            #     s = base64.b64encode(buffer).decode("utf-8")
+
+            #     action_dict['category'] = action_id
+            #     action_dict['scores'] = scores
+            #     action_dict['image'] = s
+
+            #     results.append(action_dict)
+
+            # else :
+
+            scores, bad_pose = run_pose_compare_v2(net, action_id, frame)
+
+            if scores == []:
+
+                # machine learning didn't detect a person
 
                 action_dict['category'] = action_id
-                action_dict['scores'] = scores
-                action_dict['image'] = s
+                action_dict['scores'] = 0
+                action_dict['image'] = ''
 
                 results.append(action_dict)
 
-            else :
+            else:
 
-                scores, bad_pose = run_pose_compare_v2(net, action_id, frame)
+                # machine learning detected a person or more
+
                 _, buffer = cv2.imencode('.png', bad_pose)
                 
                 s = base64.b64encode(buffer).decode("utf-8")
@@ -175,7 +194,7 @@ def pose_compare_action30():
             return jsonify(RESPONSE_action30)
         
         RESPONSE_action30['status'] = True
-        RESPONSE_action30['message'] = 'pose comparison done Succesfully'
+        RESPONSE_action30['message'] = 'pose comparison done'
         RESPONSE_action30['data'] = results
 
         return jsonify(RESPONSE_action30)
